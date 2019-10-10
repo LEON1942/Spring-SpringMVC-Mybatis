@@ -30,4 +30,24 @@
 
     <!-- 将静态资源排除在外，使执行效率更高 -->
     <mvc:default-servlet-handler/>
+
+    <!-- FreeMarkerViewResolver是Spring-Context-Support 提供的整合类，
+        在IOC容器初始化时通知SpringMVC默认使用freemarker进行数据展现
+    -->
+    <bean id="ViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <!-- 设置响应输出，解决中文乱码 -->
+        <property name="contentType" value="text/html;charset=utf-8"></property>
+        <!-- 指定Freemarker模板文件扩展名 -->
+        <property name="suffix" value=".ftl"></property>
+    </bean>
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/ftl"></property>
+        <property name="freemarkerSettings">
+            <props>
+                <!-- 设置FreeMarker 脚本与数据 渲染时使用的字符集 -->
+                <prop key="defaultEncoding">UTF-8</prop>
+            </props>
+        </property>
+    </bean>
+
 </beans>
