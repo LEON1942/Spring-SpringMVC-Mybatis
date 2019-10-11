@@ -35,7 +35,7 @@ Basic Study for SpringMVC
   SpringMVC整合Freemarker 
 
 
-## 3-15-springnvc-freemarker-getvalue
+## 3-15-springmvc-freemarker-getvalue
   Freemarker取值语法
   
   
