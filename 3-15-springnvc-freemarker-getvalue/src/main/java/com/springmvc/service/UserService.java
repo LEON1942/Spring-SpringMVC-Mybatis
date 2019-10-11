@@ -1,6 +1,6 @@
 package com.springmvc.service;
 
-import com.springmvc.dao.User;
+import com.springmvc.bean.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

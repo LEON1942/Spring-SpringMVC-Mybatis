@@ -1,14 +1,13 @@
 package com.springmvc.controller;
 
 
-import com.springmvc.dao.User;
+import com.springmvc.bean.User;
 import com.springmvc.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 @Controller
 @RequestMapping("/url")  // 为 Controller 中所有的方法指定url前缀
