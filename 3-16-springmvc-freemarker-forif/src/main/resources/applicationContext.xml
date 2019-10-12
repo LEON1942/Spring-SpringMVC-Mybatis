@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/context
+                https://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/mvc
+                http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                ">
+
+    <!-- springboot 初始化时自动扫描该包下的bean并初始位，Spring 注解形式的扫描对象 -->
+    <context:component-scan base-package="com.springmvc" ></context:component-scan>
+
+    <!-- 启用MVC的注解模式 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <!-- 配置支持的媒体类型(MIME) -->
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=utf-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 将静态资源排除在外，使执行效率更高 -->
+    <mvc:default-servlet-handler/>
+
+    <!-- FreeMarkerViewResolver是Spring-Context-Support 提供的整合类，
+        在IOC容器初始化时通知SpringMVC默认使用freemarker进行数据展现
+    -->
+    <bean id="ViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <!-- 设置响应输出，解决中文乱码 -->
+        <property name="contentType" value="text/html;charset=utf-8"></property>
+        <!-- 指定Freemarker模板文件扩展名 -->
+        <property name="suffix" value=".ftl"></property>
+    </bean>
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/ftl"></property>
+        <property name="freemarkerSettings">
+            <props>
+                <!-- 设置FreeMarker 脚本与数据 渲染时使用的字符集 -->
+                <prop key="defaultEncoding">UTF-8</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>
