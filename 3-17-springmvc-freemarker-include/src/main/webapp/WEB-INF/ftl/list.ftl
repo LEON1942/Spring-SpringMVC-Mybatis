@@ -1,0 +1,6 @@
+<h4>用户列表</h4>
+<#list users as u>
+    ...
+    ${u_index+1} - ${u.username}
+    ...
+</#list>
