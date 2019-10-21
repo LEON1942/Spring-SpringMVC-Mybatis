@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="factory">
+    <select id="findAll" resultType="com.leon.mybatis.entity.Factory">
+        SELECT * FROM factory
+    </select>
+
+    <insert id="insert" parameterType="com.leon.mybatis.entity.Factory">
+        INSERT INTO `factory`(`name`, `longitude`, `latitude`, `ad_code`, `enabled`, `deleted`)
+        VALUES (#{name}, #{longitude}, #{latitude}, #{adCode}, #{enabled}, #{deleted});
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            <!-- 当前连接最后产生的ID号 -->
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <select id="findById" resultType="com.leon.mybatis.entity.Factory">
+        <!-- 如果参数是一个基本数据类型或者封装对象，则可以使用#{value}代入即可 -->
+        select * from factory where id = #{value}
+    </select>
+
+    <update id="updateById" parameterType="com.leon.mybatis.entity.Factory">
+        UPDATE `automation_website`.`factory`
+        SET `name` = #{name},
+        `longitude` = #{longitude},
+        `latitude` = #{latitude},
+        `ad_code` = #{adCode},
+        `enabled` = #{enabled},
+        `status` = #{status},
+        `deleted` = #{deleted}
+        WHERE `id` = #{id};
+    </update>
+
+    <update id="deleteById" parameterType="int">
+        delete from `automation_website`.`factory` WHERE `id` = #{value};
+    </update>
+
+    <select id="findByIdRange" parameterType="java.util.Map" resultType="com.leon.mybatis.entity.Factory">
+        select * from factory where id between ${min} and ${max} order by id desc limit 0, ${limit}
+    </select>
+
+    <!--<select id="findDeviceFactoryMap" resultType="java.util.Map">-->  <!-- HashMap 字段排序是按照字段的hash值 -->
+    <select id="findDeviceFactoryMap" resultType="java.util.LinkedHashMap"> <!-- LinkedHashMap保证查询的字段顺序与预期一致 -->
+        select a.*, b.name as fab_name from device a, factory b where a.fab_id = b.id limit 0, 1
+    </select>
+    
+    <select id="dynamicSQL" resultType="com.leon.mybatis.entity.Factory" parameterType="java.util.Map">
+        <bind name="name" value="'%' + name + '%'" />
+        select * from factory
+        <where>
+          <if test="name != null">
+            and name like #{name}
+          </if>
+          <if test="enabled != null">
+            and enabled = #{enabled}
+          </if>
+          <if test="longitude != null and longitude &lt; 180 ">
+             and longitude &lt; #{longitude}
+          </if>
+        </where>
+    </select>
+
+</mapper>
