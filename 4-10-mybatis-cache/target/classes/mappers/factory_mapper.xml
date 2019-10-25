@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="factory">
+    <!--
+        cache标签用于配置缓存应用策略
+
+            eviction 是缓存清除策略，当缓存数量达到上限后，自动触发对应算法对缓存对象清除
+                1.LRU - 最近最少使用的：移除最长时间不被使用的对象
+                2.FIFO - 先进先出：按对象进入缓存的顺序来移除他们
+                3.SOFT - 软引用：移除基于垃圾回收器状态和软引用规则的对象
+                4.WEAK - 弱引用：更积极地移除基于垃圾收集器状态和弱引用规则的对象
+
+            flushInterval 代表间隔多长时间自动清除缓存，单位毫秒，600000毫秒 = 10分钟
+            size 缓存存储上线，用于保存对象或集合（1个集合算1个对象）的数量上线
+            readOnly 设置为true，代表只读缓存，每次从缓存取出的是对象本身，这种方式执行效率高
+                     设置为false，代表每次取出的是缓存对象的副本，每一次取出的对象都是缓存对象的拷贝，这种方式安全性高
+    -->
+
+    <cache eviction="LRU" flushInterval="600000" size="512" readOnly="true" />
+
+    <select id="findAll" resultType="com.leon.mybatis.entity.Factory">
+        SELECT * FROM factory
+    </select>
+
+    <insert id="insert" parameterType="com.leon.mybatis.entity.Factory">
+        INSERT INTO `factory`(`name`, `longitude`, `latitude`, `ad_code`, `enabled`, `deleted`)
+        VALUES (#{name}, #{longitude}, #{latitude}, #{adCode}, #{enabled}, #{deleted});
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            <!-- 当前连接最后产生的ID号 -->
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <select id="findById" resultType="com.leon.mybatis.entity.Factory">
+        <!-- 如果参数是一个基本数据类型或者封装对象，则可以使用#{value}代入即可 -->
+        select * from factory where id = #{value}
+    </select>
+
+    <update id="updateById" parameterType="com.leon.mybatis.entity.Factory">
+        UPDATE `automation_website`.`factory`
+        SET `name` = #{name},
+        `longitude` = #{longitude},
+        `latitude` = #{latitude},
+        `ad_code` = #{adCode},
+        `enabled` = #{enabled},
+        `status` = #{status},
+        `deleted` = #{deleted}
+        WHERE `id` = #{id};
+    </update>
+
+    <update id="deleteById" parameterType="int">
+        delete from `automation_website`.`factory` WHERE `id` = #{value};
+    </update>
+
+    <select id="findByIdRange" parameterType="java.util.Map" resultType="com.leon.mybatis.entity.Factory">
+        select * from factory where id between ${min} and ${max} order by id desc limit 0, ${limit}
+    </select>
+
+    <!--<select id="findDeviceFactoryMap" resultType="java.util.Map">-->  <!-- HashMap 字段排序是按照字段的hash值 -->
+    <select id="findDeviceFactoryMap" resultType="java.util.LinkedHashMap"> <!-- LinkedHashMap保证查询的字段顺序与预期一致 -->
+        select a.*, b.name as fab_name from device a, factory b where a.fab_id = b.id limit 0, 1
+    </select>
+    
+    <select id="dynamicSQL" resultType="com.leon.mybatis.entity.Factory" parameterType="java.util.Map">
+        <bind name="name" value="'%' + name + '%'" />
+        select * from factory
+        <where>
+          <if test="name != null">
+            and name like #{name}
+          </if>
+          <if test="enabled != null">
+            and enabled = #{enabled}
+          </if>
+          <if test="longitude != null and longitude &lt; 180 ">
+             and longitude &lt; #{longitude}
+          </if>
+        </where>
+    </select>
+
+
+    <select id="findByPageHelper" resultType="com.leon.mybatis.entity.Factory">
+        select * from factory
+    </select>
+
+</mapper>
