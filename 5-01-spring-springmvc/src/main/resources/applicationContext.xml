@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/context
+                https://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/mvc
+                http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                ">
+
+    <!-- 启用Spring注解形式扫描对象 -->
+    <context:component-scan base-package="com.leon" />
+
+    <!-- 启用Spring MVC的注解形式 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <!-- StringHttpMessageConverter 用于设置文本类型的http相应设置 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <!-- 相应输出的文本浏览器作为html进行解析，使用字符集为UTF-8 -->
+                        <value>text/html;charset=utf-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 将静态资源排除在外，用于提高执行效率 -->
+    <mvc:default-servlet-handler/>
+
+    <!-- FreeMarkerViewResolver 是 spring-context-support 提供的整合类
+         在IOC容器初始化时通知 SpringMVC 默认使用 freemarker 进行数据展现
+     -->
+    <bean id="ViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <!-- 设置相应输出，并解决中文乱码 -->
+        <property name="contentType" value="text/html;charset=utf-8"/>
+        <!-- 指定freemarker模板文件扩展名 -->
+        <property name="suffix" value=".ftl" />
+    </bean>
+    <!-- Freemarker 设置类 -->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <!-- 配置Freemarker页面模板资源目录 -->
+        <property name="templateLoaderPath" value="/WEB-INF/ftl" />
+        <!-- 其他模板引擎设置 -->
+        <property name="freemarkerSettings">
+            <props>
+                <!-- 设置Freemarker脚本与数据渲染时使用的字符集 -->
+                <prop key="defaultEncoding">UTF-8</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>
