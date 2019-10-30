@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.leon.ssm.mapper.FactoryMapper">
+    <select id="findById" parameterType="Integer" resultType="com.leon.ssm.entity.Factory">
+        select * from factory where id = #{value}
+    </select>
+    <select id="findByCondition" parameterType="java.util.Map" resultType="com.leon.ssm.entity.Factory">
+        select * from factory
+        where
+          id >= #{minId}
+          and enabled = #{enabled}
+    </select>
+</mapper>
