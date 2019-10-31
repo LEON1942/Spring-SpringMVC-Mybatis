@@ -2,7 +2,7 @@
 
 这些基础项目包含了Spring、SpringMVC、Mybatis的整合案例，每一个小案例都可以独立运行，且都在相应文件夹的README.md中描述了注意事项和相关测试案例。
 
-## 3-5-springboot-configuationmark
+## 3-5-spring-configuationmark
   JavaConfig配置方式配置Spring
 
 ## 3-6-spring-multiple-ioc
