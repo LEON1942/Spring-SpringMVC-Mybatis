@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                http://www.springframework.org/schema/context
+                https://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/mvc
+                http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                http://www.springframework.org/schema/tx
+                http://www.springframework.org/schema/tx/spring-tx.xsd
+                ">
+
+    <!-- 启用Spring注解形式扫描对象 -->
+    <context:component-scan base-package="com.leon" />
+
+    <!-- 启用Spring MVC的注解形式 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <!-- StringHttpMessageConverter 用于设置文本类型的http相应设置 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <!-- 相应输出的文本浏览器作为html进行解析，使用字符集为UTF-8 -->
+                        <value>text/html;charset=utf-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 将静态资源排除在外，用于提高执行效率 -->
+    <mvc:default-servlet-handler/>
+
+    <!-- FreeMarkerViewResolver 是 spring-context-support 提供的整合类
+         在IOC容器初始化时通知 SpringMVC 默认使用 freemarker 进行数据展现
+     -->
+    <bean id="ViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <!-- 设置相应输出，并解决中文乱码 -->
+        <property name="contentType" value="text/html;charset=utf-8"/>
+        <!-- 指定freemarker模板文件扩展名 -->
+        <property name="suffix" value=".ftl" />
+    </bean>
+    <!-- Freemarker 设置类 -->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <!-- 配置Freemarker页面模板资源目录 -->
+        <property name="templateLoaderPath" value="/WEB-INF/ftl" />
+        <!-- 其他模板引擎设置 -->
+        <property name="freemarkerSettings">
+            <props>
+                <!-- 设置Freemarker脚本与数据渲染时使用的字符集 -->
+                <prop key="defaultEncoding">UTF-8</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <!--Mybatis 整合配置
+        Mybatis 与 Spring整合是指SessionFactory对象不再由我们自己创建
+        而改为使用配置的方式由Spring IOC容器创建与管理
+        这样做的好处是，配置方便，并在此基础上为Mybatis扩展更多额外的功能
+    -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"  init-method="init" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/automation_website?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8" />
+        <property name="username" value="root" />
+        <property name="password" value="root" />
+        <!--在初始化连接池的时候默认创建5个链接-->
+        <property name="initialSize" value="5" />
+        <!--最大连接数量-->
+        <property name="maxActive" value="20"/>
+        <!--设置空闲连接数最少为5个-->
+        <property name="minIdle" value="5"/>
+        <!--数据库连接创建最大等待时间60秒-->
+        <property name="maxWait" value="60000" />
+        <!--是否在分配连接时检测连接有效性-->
+        <property name="testOnBorrow" value="false" />
+        <!--是否在连接空闲状态时检测连接有效性-->
+        <property name="testWhileIdle" value="true" />
+        <!--是否在归还时检测连接有效性-->
+        <property name="testOnReturn" value="false"/>
+        <!--测试有效性的SQL语句-->
+        <property name="validationQuery" value="SELECT 1" />
+        <!--filter 用于开启监控过滤器
+            stat 是SQL及Web监控
+            wall 是预防SQL注入攻击
+            slf4j 是日志输出-->
+        <property name="filters" value="stat,wall,slf4j"/>
+        <!--mergeSql 对相同SQL进行合并
+            slowSqlMillis定义超过500毫秒执行时间的SQL为慢查询-->
+        <property name="connectProperties" value="druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500"/>
+        <property name="asyncInit" value="true" />
+    </bean>
+    <!--定义SQLSessionFactory连接工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--关联数据源-->
+        <property name="dataSource" ref="dataSource" />
+        <!--配置文件地址-->
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+        <!--mapper XML文件保存目录-->
+        <property name="mapperLocations" value="classpath:mappers/*.xml" />
+    </bean>
+
+    <!--Spring 为 Mybatis 提供了一种新的开发方式 "Mapper接口"，-->
+    <!--这个配置用于扫描指定包下所有有效的Mapper接口类-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.leon.ssm" />
+    </bean>
+
+    <!--事务管理器 TransactionManger 提供了声明式事务的支持，在程序成功提交，运行时异常回滚-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--开始注解式的声明式事务-->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+</beans>
