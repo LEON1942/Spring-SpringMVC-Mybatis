@@ -92,6 +92,9 @@
 ## 5-03-sm-mapping
   5-03 使用Mapper接口开发方式
 
+## 5-04-sm-transaction
+  5-04 使用声明式事务
+
 
   
   
