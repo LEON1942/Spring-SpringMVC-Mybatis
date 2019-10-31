@@ -1,0 +1,4 @@
+com/leon/ssm/service/FactoryService.class
+com/leon/ssm/mapper/FactoryMapper.class
+com/leon/ssm/entity/Orders.class
+com/leon/ssm/entity/Factory.class
