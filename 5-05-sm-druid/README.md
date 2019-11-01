@@ -35,6 +35,37 @@
         <property name="asyncInit" value="true" />
     </bean>
 
-## 2、在applicationContext.xml中配置 servlet 
+## 2、在 web.xml 中配置 Druid 相关 servlet 及 filter
+
+    <!--Druid连接池监控界面-->
+    <filter>
+        <filter-name>DruidWebStateFilter</filter-name>
+        <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+        <init-param>
+            <param-name>exclusions</param-name>
+            <!-- 排除静态资源以及Druid管理页面 -->
+            <param-value>*.js,*.gif,*jpg,*.css,*.ico,/druid/*</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>DruidWebStateFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <servlet>
+        <servlet-name>DruidServlet</servlet-name>
+        <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+        <init-param>
+            <param-name>loginUsername</param-name>
+            <param-value>admin</param-value>
+        </init-param>
+        <init-param>
+            <param-name>loginPassword</param-name>
+            <param-value>123456</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DruidServlet</servlet-name>
+        <url-pattern>/druid/*</url-pattern>
+    </servlet-mapping>
 
 
