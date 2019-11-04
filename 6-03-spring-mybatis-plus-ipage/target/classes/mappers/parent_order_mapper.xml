@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leon.ssm.mapper.ParentOrderMapper">
+
+    <select id="selectSqlPage" parameterType="java.util.Map" resultType="java.util.LinkedHashMap">
+        select
+        a.order_no, c.order_no, a.receiver, c.stamper_content, a.receiver_address, a.receiver_phone
+        from parent_orders a, order_relative_relationship b, orders c
+        where a.id = b.parent_order_id and b.child_id = c.id
+        and a.receiver_address like CONCAT('%',#{p.receiverAddress},'%')
+    </select>
+</mapper>
