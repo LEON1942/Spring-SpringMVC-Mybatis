@@ -35,7 +35,7 @@
     
     <web-app>
         <filter>
-            <filter-name>charaterfilter</filter-name>
+            <filter-name>characterfilter</filter-name>
             <!-- CharacterEncodingFilter 将Post请求中的参数字符集设置为UTF-8-->
             <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
             <init-param>
@@ -44,7 +44,7 @@
             </init-param>
         </filter>
         <filter-mapping>
-            <filter-name>charaterfilter</filter-name>
+            <filter-name>characterfilter</filter-name>
             <url-pattern>/</url-pattern>
         </filter-mapping>
     </web-app>
