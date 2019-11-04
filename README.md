@@ -95,6 +95,19 @@
 ## 5-04-sm-transaction
   5-04 使用声明式事务
 
+## 5-05-sm-druid
+  5-05 使用 阿里巴巴 Druid 连接池技术
+
+## 5-06-spring-junit
+  5-06 spring 继承Junit 测试单元框架
+
+
+## 6-01-spring-mybatis-plus
+  6-01 mybatis-plus 使用入门
+  
+  
+
+
 
   
   
