@@ -101,9 +101,14 @@
 ## 5-06-spring-junit
   5-06 spring 继承Junit 测试单元框架
 
-
 ## 6-01-spring-mybatis-plus
   6-01 mybatis-plus 使用入门
+
+## 6-02-spring-mybatis-plus-query-wrapper
+  6-2 QueryWrapper查询构造器
+
+## 6-03-spring-mybatis-plus-ipage
+  6-3 Mybatis-Plus分页插件
   
   
 
