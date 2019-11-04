@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.leon.ssm.mapper.FactoryMapper">
+    <select id="findById" parameterType="Integer" resultType="com.leon.ssm.entity.Factory">
+        select * from factory where id = #{value}
+    </select>
+    <select id="findByCondition" parameterType="java.util.Map" resultType="com.leon.ssm.entity.Factory">
+        select * from factory
+        where
+          id >= #{minId}
+          and enabled = #{enabled}
+    </select>
+
+    <insert id="insert" parameterType="com.leon.ssm.entity.Factory">
+        INSERT INTO `factory`(`name`, `longitude`, `latitude`, `ad_code`, `enabled`, `deleted`)
+        VALUES (#{name}, #{longitude}, #{latitude}, #{adCode}, #{enabled}, #{deleted});
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            <!-- 当前连接最后产生的ID号 -->
+            select last_insert_id()
+        </selectKey>
+    </insert>
+</mapper>
