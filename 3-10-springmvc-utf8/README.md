@@ -1,6 +1,6 @@
-#中文乱码的配置
+# 中文乱码的配置
 
-##1、Response响应乱码-Spring配置StringHttpMessageConverter
+## 1、Response响应乱码-Spring配置StringHttpMessageConverter
 
 位置：项目目录/src/main/resources/applicationContext.xml
 
