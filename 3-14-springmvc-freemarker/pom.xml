@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>5.2.0.RELEASE</version>
+            <version>5.3.18</version>
         </dependency>
         <!-- springMVC 支持的 JSON 序列化工具包 JACKSON -->
         <dependency>
